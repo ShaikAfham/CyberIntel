@@ -1,0 +1,42 @@
+# ── Node / Extension ───────────────────────────────────────
+node_modules/
+dist/
+*.js.map
+
+# ── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.env
+
+# ── ML Artifacts ───────────────────────────────────────────
+*.h5
+*.pkl
+*.bin          # TF.js weight shards (large binary files)
+*_tfjs/        # Generated TF.js model folders (copy manually)
+anomaly_threshold.json
+
+# ── Datasets (too large for git) ───────────────────────────
+ml/xss/*.csv
+ml/phishing/*.csv
+ml/anomaly/*.csv
+*.parquet
+
+# ── Backend ─────────────────────────────────────────────────
+securai_reports.db
+backend/*.db
+
+# ── OS / Editor ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Build ───────────────────────────────────────────────────
+*.zip
+securai-sentinel-*.zip

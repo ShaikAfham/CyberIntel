@@ -1,0 +1,84 @@
+{
+  "manifest_version": 3,
+  "name": "CyberINTEL-AI",
+  "version": "1.0.0",
+  "description": "AI-powered penetration testing & SOC analysis for every website you visit",
+  "author": "Your Name",
+
+  "options_page": "popup/settings.html",
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "cookies",
+    "tabs",
+    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
+    "webNavigation",
+    "notifications",
+    "sidePanel",
+    "offscreen"
+  ],
+
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/scanner.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/monitor.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "CyberINTEL-AI"
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "models/xss/*",
+        "models/phishing/*",
+        "models/anomaly/*",
+        "*.wasm"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  }
+}

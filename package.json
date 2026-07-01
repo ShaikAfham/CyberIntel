@@ -1,0 +1,28 @@
+{
+  "name": "cyberintel-ai",
+  "version": "1.0.0",
+  "description": "AI-Powered Browser Extension for Penetration Testing & SOC Analysis",
+  "scripts": {
+    "build": "node --max-old-space-size=4096 node_modules/webpack/bin/webpack.js --config webpack.config.js --mode production",
+    "dev": "webpack --config webpack.config.js --mode development --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.260",
+    "@types/node": "^20.0.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "html-webpack-plugin": "^5.5.3",
+    "mini-css-extract-plugin": "^2.7.6",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.6.0"
+  }
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>CyberINTEL-AI</title>
+</head>
+<body>
+
+<!-- ── TIER 1 AUTH MODAL ─────────────────────────────────── -->
+<div id="modal-tier1" class="modal-overlay" style="display:none">
+  <div class="modal-box glass-card">
+    <div class="modal-icon">&#128270;</div>
+    <h2 class="modal-title">Scan Authorization</h2>
+    <p class="modal-body" id="modal-tier1-body">
+      CyberINTEL-AI wants to scan <strong id="tier1-domain"></strong>.<br><br>
+      This will send network requests to the target site.<br>
+      <strong>Do you have authorization to scan this website?</strong>
+    </p>
+    <div class="modal-btns">
+      <button id="btn-tier1-cancel" class="modal-btn modal-btn-cancel">Cancel</button>
+      <button id="btn-tier1-allow"  class="modal-btn modal-btn-allow">Allow Scan</button>
+    </div>
+    <p class="modal-note">Consent stored for this session only.</p>
+  </div>
+</div>
+
+
+<div id="app">
+
+  <header class="sp-header">
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <div class="logo-text">
+        <span class="logo-name">CyberINTEL<span class="logo-accent">-AI</span></span>
+        <span class="logo-sub">Threat Intelligence</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="proto-badge" class="proto-badge"></span>
+      <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
+    </div>
+  </header>
+
+  <div class="target-card glass-card">
+    <div class="target-left">
+      <span id="target-pulse" class="target-pulse"></span>
+      <div class="target-text">
+        <div id="target-domain" class="target-domain">&#8212;</div>
+        <div id="target-url" class="target-url">Loading...</div>
+      </div>
+    </div>
+    <div class="target-stats">
+      <div class="tstat"><span id="stat-scripts" class="tstat-n">&#8212;</span><span class="tstat-l">Scripts</span></div>
+      <div class="tstat"><span id="stat-forms"   class="tstat-n">&#8212;</span><span class="tstat-l">Forms</span></div>
+      <div class="tstat"><span id="stat-cookies" class="tstat-n">&#8212;</span><span class="tstat-l">Cookies</span></div>
+    </div>
+  </div>
+
+  <div class="control-row">
+    <div class="score-wrap">
+      <svg class="ring-svg" viewBox="0 0 100 100">
+        <circle class="ring-track" cx="50" cy="50" r="42"/>
+        <circle class="ring-fill" id="score-ring-fill" cx="50" cy="50" r="42"
+                stroke-dasharray="264" stroke-dashoffset="264"/>
+      </svg>
+      <div class="score-inner">
+        <span id="score-value" class="score-num">--</span>
+        <span id="score-grade" class="score-grade">?</span>
+      </div>
+    </div>
+    <div class="scan-right">
+      <div id="scan-status" class="scan-status">Not scanned</div>
+      <div id="scan-time"   class="scan-time"></div>
+      <div class="scan-btns">
+        <button id="btn-quick"  class="btn-action btn-quick">&#9654; Quick Scan</button>
+        <button id="btn-full"   class="btn-action btn-full">&#10022; Full Audit</button>
+        <button id="btn-threat" class="btn-action btn-threat">&#9888; Threat Scan</button>
+        <button id="btn-stop"   class="btn-action btn-stop" style="display:none">&#9632; Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-section">
+    <button id="btn-auth-toggle" class="auth-toggle">&#128273; Authenticated Audit</button>
+    <div class="auth-body" id="auth-body" style="display:none">
+      <input type="password" id="auth-token-input" class="auth-input"
+             placeholder="Bearer token or API key (in-memory, never stored)"
+             autocomplete="off" spellcheck="false"/>
+    </div>
+  </div>
+
+  <div id="progress-zone" class="progress-zone" style="display:none">
+    <div class="progress-track">
+      <div class="scan-beam"></div>
+      <div class="grid-line" style="left:25%"></div>
+      <div class="grid-line" style="left:50%"></div>
+      <div class="grid-line" style="left:75%"></div>
+    </div>
+    <div class="stages-row">
+      <span class="stage" id="stage-dom">DOM</span>
+      <span class="stage" id="stage-headers">Headers</span>
+      <span class="stage" id="stage-ml">AI / ML</span>
+    </div>
+    <div id="progress-phase" class="progress-phase">Initializing...</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-track">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width:0%"></div>
+      </div>
+      <span id="progress-pct" class="progress-pct">0%</span>
+    </div>
+    <div id="scan-timeline" class="scan-timeline"></div>
+  </div>
+
+  <div class="sev-strip">
+    <div class="sev-cell c-crit"><span id="cnt-crit" class="sev-n">0</span><span class="sev-l">Critical</span></div>
+    <div class="sev-cell c-high"><span id="cnt-high" class="sev-n">0</span><span class="sev-l">High</span></div>
+    <div class="sev-cell c-med" ><span id="cnt-med"  class="sev-n">0</span><span class="sev-l">Medium</span></div>
+    <div class="sev-cell c-low" ><span id="cnt-low"  class="sev-n">0</span><span class="sev-l">Low</span></div>
+    <div class="sev-cell c-info"><span id="cnt-info" class="sev-n">0</span><span class="sev-l">Info</span></div>
+  </div>
+
+  <nav class="sp-tabs">
+    <button class="sp-tab active" data-pane="findings">Findings</button>
+    <button class="sp-tab" data-pane="discovery">Discovery</button>
+    <button class="sp-tab" data-pane="monitor">Monitor</button>
+    <button class="sp-tab" data-pane="ml">AI / ML</button>
+    <button class="sp-tab" data-pane="export">Export</button>
+    <button class="sp-tab" data-pane="history">History</button>
+  </nav>
+
+  <div class="pane active" id="pane-findings">
+
+    <!-- Scan mode controls (persistent) -->
+    <div class="scan-mode-bar">
+      <label class="viva-toggle-wrap" title="Show only high-confidence, evidence-backed findings">
+        <input type="checkbox" id="viva-mode-toggle">
+        <span class="viva-label">Strict Accuracy</span>
+      </label>
+      <select id="reveal-speed-select" class="speed-sel" title="Finding reveal speed">
+        <option value="cinematic">Cinematic</option>
+        <option value="normal" selected>Normal</option>
+        <option value="fast">Fast</option>
+      </select>
+    </div>
+
+    <!-- Viva Mode banner -->
+    <div id="viva-mode-banner" class="viva-banner" style="display:none">
+      &#10003; Strict Accuracy Mode &#8212; only high-confidence, evidence-backed findings shown
+    </div>
+
+    <!-- Live finding spotlight (one at a time) -->
+    <div id="finding-spotlight" class="finding-spotlight" style="display:none">
+      <div class="spotlight-header">
+        <span class="spotlight-label">&#9632; ANALYZING FINDING</span>
+        <span id="spotlight-queue-info" class="spotlight-queue"></span>
+      </div>
+      <div id="spotlight-card" class="spotlight-card"></div>
+    </div>
+
+    <!-- Revealed findings list -->
+    <div id="findings-list" class="findings-list">
+      <div class="empty-state">Run a scan to see security findings</div>
+    </div>
+
+    <!-- Analyst review — medium/low confidence (Strict Accuracy Mode) -->
+    <div id="analyst-review-section" class="analyst-section" style="display:none">
+      <button id="analyst-review-toggle" class="analyst-toggle">
+        <span class="analyst-arrow">&#9654;</span>
+        <span>Additional Signals</span>
+        <span id="analyst-count" class="analyst-count-badge">0</span>
+      </button>
+      <div id="analyst-review-list" class="analyst-list" style="display:none"></div>
+    </div>
+
+  </div>
+
+  <div class="pane" id="pane-discovery">
+    <div class="disc-subnav">
+      <button class="disc-tab active" data-disc="scripts">Scripts</button>
+      <button class="disc-tab" data-disc="forms">Forms</button>
+      <button class="disc-tab" data-disc="links">Links</button>
+      <button class="disc-tab" data-disc="cookies">Cookies</button>
+    </div>
+    <div id="disc-scripts" class="disc-pane active"><div class="empty-state">Run a scan first</div></div>
+    <div id="disc-forms"   class="disc-pane"><div class="empty-state">Run a scan first</div></div>
+    <div id="disc-links"   class="disc-pane"><div class="empty-state">Run a scan first</div></div>
+    <div id="disc-cookies" class="disc-pane"><div class="empty-state">Run a scan first</div></div>
+  </div>
+
+  <div class="pane" id="pane-monitor">
+    <div class="monitor-header">
+      <span class="monitor-live"><span class="live-dot"></span>Live Monitor</span>
+      <button id="btn-clear-monitor" class="ghost-btn">Clear</button>
+    </div>
+    <div id="monitor-list" class="monitor-list">
+      <div class="empty-state">Monitoring page activity...</div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-ml">
+    <div class="ml-model-status glass-card">
+      <div class="ml-status-label">AI Model Status</div>
+      <div class="ml-model-row">
+        <span class="ml-dot" id="dot-xss"></span>
+        <span class="ml-model-name">XSS Detection</span>
+        <span class="ml-model-state" id="state-xss">Loading...</span>
+      </div>
+      <div class="ml-model-row">
+        <span class="ml-dot" id="dot-phishing"></span>
+        <span class="ml-model-name">Phishing Detection</span>
+        <span class="ml-model-state" id="state-phishing">Loading...</span>
+      </div>
+      <div class="ml-model-row">
+        <span class="ml-dot" id="dot-anomaly"></span>
+        <span class="ml-model-name">Anomaly Detection</span>
+        <span class="ml-model-state" id="state-anomaly">Loading...</span>
+      </div>
+    </div>
+    <div id="ml-results" class="ml-results">
+      <div class="empty-state">Run a Full Audit to see AI analysis</div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-history">
+    <div class="history-toolbar">
+      <span class="history-title">Scan History</span>
+      <button id="btn-clear-history" class="ghost-btn">Clear All</button>
+    </div>
+    <div id="history-list" class="history-list">
+      <div class="empty-state">No scan history yet</div>
+    </div>
+  </div>
+
+  <div class="pane" id="pane-export">
+    <div class="export-wrap">
+      <div class="export-info glass-card" id="export-summary">
+        Run a scan first to generate a report.
+      </div>
+      <button id="btn-pdf"  class="export-btn" disabled>&#8659; Download PDF Report</button>
+      <button id="btn-json" class="export-btn" disabled>{ } Export JSON Data</button>
+    </div>
+  </div>
+
+
+  <!-- ── CINEMATIC SCAN VIEW (Feature 2) ─────────────────── -->
+  <div id="cinematic-view" class="cinematic-view" style="display:none">
+    <div class="cin-scanline"></div>
+    <div class="cin-header-row">
+      <span class="cin-prompt">CYBERINTEL&#8209;AI &nbsp;&#9658;</span>
+      <span id="cin-domain" class="cin-domain">—</span>
+    </div>
+    <div class="cin-channel-row">
+      <div id="cin-channel-label" class="cin-channel-label">STANDBY</div>
+      <div class="cin-prog-wrap">
+        <div id="cin-prog-fill" class="cin-prog-fill" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="cin-steps" class="cin-steps"></div>
+    <div class="cin-footer">
+      <span class="cin-blink-dot"></span>
+      <span id="cin-live" class="cin-live-text">STANDBY</span>
+      <button id="btn-cin-cancel" class="cin-cancel-btn">&#9632; ABORT</button>
+    </div>
+  </div>
+
+  <!-- ── THREAT REPORT VIEW (Feature 4) ──────────────────── -->
+  <div id="threat-report-view" class="threat-report-view" style="display:none">
+    <div class="rpt-header-card">
+      <div class="rpt-domain-row">
+        <span class="rpt-target-label">TARGET</span>
+        <span id="rpt-domain" class="rpt-domain-val">—</span>
+      </div>
+      <div id="rpt-timestamp" class="rpt-timestamp">—</div>
+      <div id="rpt-counts" class="rpt-counts"></div>
+    </div>
+    <div class="rpt-actions-row">
+      <button id="btn-rpt-copy"   class="rpt-act-btn">&#128203; COPY</button>
+      <button id="btn-rpt-export" class="rpt-act-btn">&#128190; JSON</button>
+      <button id="btn-rpt-reset"  class="rpt-act-btn rpt-reset-btn">&#8635; NEW SCAN</button>
+    </div>
+    <div id="rpt-findings" class="rpt-findings-list"></div>
+  </div>
+
+</div>
+</body>
+</html>

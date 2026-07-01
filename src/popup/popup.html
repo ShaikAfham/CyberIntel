@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>CyberINTEL-AI</title>
+</head>
+<body>
+<div id="app">
+
+  <header class="p-header">
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <div class="logo-text">
+        <span class="logo-name">CyberINTEL<span class="logo-accent">-AI</span></span>
+        <span class="logo-sub">Security Scanner</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="proto-badge" class="proto-badge"></span>
+      <button id="btn-settings" class="icon-btn" title="Settings">&#9881;</button>
+    </div>
+  </header>
+
+  <div class="url-row">
+    <span class="url-icon">&#128279;</span>
+    <span id="current-url" class="url-text">Loading...</span>
+  </div>
+
+  <div class="main-panel">
+    <div class="score-wrap">
+      <svg class="ring-svg" viewBox="0 0 80 80">
+        <circle class="ring-track" cx="40" cy="40" r="32"/>
+        <circle class="ring-fill" id="score-ring-fill" cx="40" cy="40" r="32"
+                stroke-dasharray="201" stroke-dashoffset="201"/>
+      </svg>
+      <div class="score-inner">
+        <span id="score-value" class="score-num">--</span>
+        <span id="score-grade" class="score-grade">?</span>
+      </div>
+    </div>
+    <div class="right-col">
+      <div id="scan-status" class="scan-status">Not scanned</div>
+      <div class="sev-preview">
+        <div class="sp-cell c-crit"><span id="cnt-crit" class="sp-n">0</span><span class="sp-l">Critical</span></div>
+        <div class="sp-cell c-high"><span id="cnt-high" class="sp-n">0</span><span class="sp-l">High</span></div>
+        <div class="sp-cell c-med" ><span id="cnt-med"  class="sp-n">0</span><span class="sp-l">Medium</span></div>
+        <div class="sp-cell c-low" ><span id="cnt-low"  class="sp-n">0</span><span class="sp-l">Low</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button id="btn-scan"      class="btn-primary">&#9654; Quick Scan</button>
+    <button id="btn-dashboard" class="btn-secondary">&#9645; Dashboard</button>
+  </div>
+
+  <div id="scan-msg" class="scan-msg"></div>
+
+</div>
+</body>
+</html>
